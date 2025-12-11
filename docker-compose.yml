@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: stockel_app
+    ports:
+      - '3000:3000'        # Puerto para acceder a Next.js
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://stockel_user:password@db:5432/stockel_db
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/src/app   # Sincroniza tu código local con el contenedor
+    command: sh -c "npm install && npm run dev"
+
+  db:
+    image: postgres:15
+    container_name: stockel_db
+    restart: always
+    environment:
+      POSTGRES_USER: stockel_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: stockel_db
+    ports:
+      - '5432:5432'        # Puerto para conectar desde local si quieres
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # Persistencia de datos
+
+volumes:
+  pgdata:
