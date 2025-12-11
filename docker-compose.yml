@@ -12,7 +12,9 @@ services:
     depends_on:
       - db
     volumes:
-      - ./:/usr/src/app   # Sincroniza tu código local con el contenedor
+      - ./:/app           # Sincroniza tu código local con el contenedor (debe coincidir con WORKDIR)
+      - /app/node_modules # Evita sobrescribir node_modules del contenedor
+      - /app/.next        # Evita sobrescribir el cache de Next.js
     command: sh -c "npm install && npm run dev"
 
   db:

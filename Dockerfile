@@ -13,6 +13,13 @@ RUN npm install
 # Copia todo el proyecto
 COPY . .
 
+# Configura DATABASE_URL para Prisma generate (necesario para el schema)
+ARG DATABASE_URL=postgresql://stockel_user:password@db:5432/stockel_db
+ENV DATABASE_URL=$DATABASE_URL
+
+# Genera el cliente de Prisma
+RUN npx prisma generate
+
 # Construye la app Next.js
 RUN npm run build
 
