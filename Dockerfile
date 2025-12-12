@@ -1,6 +1,9 @@
 # Usa una imagen oficial de Node
 FROM node:20-alpine
 
+# Instala OpenSSL y otras dependencias necesarias para Prisma
+RUN apk add --no-cache openssl libc6-compat
+
 # Crea la carpeta de la app dentro del contenedor
 WORKDIR /app
 
