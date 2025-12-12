@@ -19,7 +19,7 @@ jobs:
           script: |
             cd /root/stockel
             git pull origin main
-            docker-compose down
-            docker-compose up -d --build
-            docker-compose exec -T app npx prisma migrate deploy
+            docker compose down
+            docker compose up -d --build
+            docker compose exec -T app npx prisma migrate deploy
             echo "Deploy completado exitosamente!"

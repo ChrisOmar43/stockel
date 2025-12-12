@@ -229,6 +229,7 @@ export default function HomePage() {
         {/* Footer */}
         <div className="text-center mt-8 text-white text-sm">
           <p>© 2025 Stockël. Todos los derechos reservados.</p>
+          <p className="mt-2 text-blue-100">Deploy automático con GitHub Actions funcionando ✅</p>
         </div>
       </div>
     </div>
