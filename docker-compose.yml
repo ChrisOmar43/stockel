@@ -1,13 +1,37 @@
 version: '3.9'
 
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: stockel_nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - app
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    container_name: stockel_certbot
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
   app:
     build: .
     container_name: stockel_app
-    ports:
-      - '3000:3000'        # Puerto para acceder a Next.js
+    expose:
+      - '3000'        # Exponer internamente a la red de Docker
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - DATABASE_URL=postgresql://stockel_user:password@db:5432/stockel_db
     depends_on:
       - db
@@ -15,7 +39,7 @@ services:
       - ./:/app           # Sincroniza tu código local con el contenedor (debe coincidir con WORKDIR)
       - /app/node_modules # Evita sobrescribir node_modules del contenedor
       - /app/.next        # Evita sobrescribir el cache de Next.js
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install && npm run build && npm run start"
 
   db:
     image: postgres:15
@@ -25,8 +49,8 @@ services:
       POSTGRES_USER: stockel_user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: stockel_db
-    ports:
-      - '5432:5432'        # Puerto para conectar desde local si quieres
+    expose:
+      - '5432'        # Solo exponer internamente
     volumes:
       - pgdata:/var/lib/postgresql/data   # Persistencia de datos
 
