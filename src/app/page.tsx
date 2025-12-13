@@ -155,7 +155,7 @@ export default function HomePage() {
         <div className="bg-white rounded-lg shadow-2xl p-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 text-center">
-              Iniciar Sesión
+              Iniciar Sesión Prueba
             </h2>
             <p className="text-gray-600 text-center mt-2">
               Accede a tu cuenta
