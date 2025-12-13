@@ -29,7 +29,6 @@ services:
     expose:
       - '3000'        # Exponer internamente a la red de Docker
     environment:
-      - NODE_ENV=production
       - DATABASE_URL=postgresql://stockel_user:password@db:5432/stockel_db
     depends_on:
       - db
@@ -37,7 +36,7 @@ services:
       - ./:/app           # Sincroniza tu código local con el contenedor (debe coincidir con WORKDIR)
       - /app/node_modules # Evita sobrescribir node_modules del contenedor
       - /app/.next        # Evita sobrescribir el cache de Next.js
-    command: sh -c "npm install && npm run build && npm run start"
+    command: sh -c "npm ci && npm run build && NODE_ENV=production npm run start"
 
   db:
     image: postgres:15
